@@ -78,7 +78,7 @@ local EVENTS = {
     {
         Id = "arvore_prestigio",
         Title = "Arvore de Prestigio",
-        Description = "Executa PrestigeUpgrade(2), PrestigeUpgrade(9) e PrestigeUpgrade(1)",
+        Description = "Executa PrestigeUpgrade(2, 9, 1, 31, 11, 3, 28)",
         ToggleKey = Enum.KeyCode.J,
         Delay = 0.2,
         Run = function()
@@ -86,6 +86,10 @@ local EVENTS = {
             remote:FireServer(2)
             remote:FireServer(9)
             remote:FireServer(1)
+            remote:FireServer(31)
+            remote:FireServer(11)
+            remote:FireServer(3)
+            remote:FireServer(28)
         end,
     },
 }
