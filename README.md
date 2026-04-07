@@ -8,6 +8,12 @@ Projeto novo e separado, reaproveitando apenas a GUI base do projeto anterior.
 loadstring(readfile("moneycash\\moneycash.lua"), "@moneycash\\moneycash.lua")()
 ```
 
+## Rodar pelo GitHub Raw
+
+```lua
+loadstring(game:HttpGet("https://raw.githubusercontent.com/marcoscarneiroaj/moneycash/main/moneycash.lua", true))()
+```
+
 ## Evento atual
 
 - `Click Money`: faz `game:GetService("ReplicatedStorage").Events.ClickMoney:FireServer()`
