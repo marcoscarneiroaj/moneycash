@@ -20,12 +20,8 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/marcoscarneiroaj/mone
 - Botao na GUI para ligar e desligar
 - Tecla padrao: `F`
 - Delay padrao: `0.01`
-- `Upgrade 1`: faz `game:GetService("ReplicatedStorage").Events.Upgrade:FireServer(1, false)`
+- `Melhoria Cash`: faz `Upgrade(1, false)`, `Upgrade(2, false)`, `Upgrade(2, true)` e `Upgrade(3, false)` em sequencia
 - Tecla padrao: `G`
-- `Upgrade 2`: faz `game:GetService("ReplicatedStorage").Events.Upgrade:FireServer(2, false)`
-- Tecla padrao: `H`
-- `Upgrade 2 Max`: faz `game:GetService("ReplicatedStorage").Events.Upgrade:FireServer(2, true)`
-- Tecla padrao: `J`
 
 ## Proximos remotos
 
