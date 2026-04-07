@@ -30,6 +30,10 @@ Esse `loader.lua` usa cache bust interno para puxar a versao mais nova do `money
 - Delay padrao: `0.01`
 - `Melhoria Cash`: faz `Upgrade(1, false)`, `Upgrade(2, false)`, `Upgrade(2, true)` e `Upgrade(3, false)` em sequencia
 - Tecla padrao: `G`
+- `Prestigio`: faz `game:GetService("ReplicatedStorage").Events.Prestige:FireServer()`
+- Tecla padrao: `H`
+- `Arvore de Prestigio`: faz `PrestigeUpgrade(2)`, `PrestigeUpgrade(9)` e `PrestigeUpgrade(1)` em sequencia
+- Tecla padrao: `J`
 - `Delete`: minimiza ou mostra a GUI
 
 ## Proximos remotos
