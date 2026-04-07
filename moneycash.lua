@@ -28,8 +28,16 @@ local function getClickMoneyRemote()
     return getEventsFolder():WaitForChild("ClickMoney")
 end
 
+local function getClickGemRemote()
+    return getClickMoneyRemote():WaitForChild("ClickGem")
+end
+
 local function getUpgradeRemote()
     return getEventsFolder():WaitForChild("Upgrade")
+end
+
+local function getGemUpgradeRemote()
+    return getUpgradeRemote():WaitForChild("GemUpgrade")
 end
 
 local function getPrestigeRemote()
@@ -63,6 +71,32 @@ local EVENTS = {
             remote:FireServer(2, false)
             remote:FireServer(2, true)
             remote:FireServer(3, false)
+        end,
+    },
+    {
+        Id = "click_gem",
+        Title = "Click Gem",
+        Description = 'game:GetService("ReplicatedStorage").Events.ClickMoney.ClickGem:FireServer()',
+        ToggleKey = Enum.KeyCode.K,
+        Delay = 0.01,
+        Run = function()
+            local remote = getClickGemRemote()
+            remote:FireServer()
+            remote:FireServer()
+        end,
+    },
+    {
+        Id = "gemas",
+        Title = "Gemas",
+        Description = "Executa GemUpgrade(3,false), GemUpgrade(3,false), GemUpgrade(2,false) e GemUpgrade(1,false)",
+        ToggleKey = Enum.KeyCode.L,
+        Delay = 0.1,
+        Run = function()
+            local remote = getGemUpgradeRemote()
+            remote:FireServer(3, false)
+            remote:FireServer(3, false)
+            remote:FireServer(2, false)
+            remote:FireServer(1, false)
         end,
     },
     {
