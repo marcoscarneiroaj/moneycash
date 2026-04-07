@@ -44,33 +44,17 @@ local EVENTS = {
         end,
     },
     {
-        Id = "upgrade_1_single",
-        Title = "Upgrade 1",
-        Description = 'game:GetService("ReplicatedStorage").Events.Upgrade:FireServer(1, false)',
+        Id = "melhoria_cash",
+        Title = "Melhoria Cash",
+        Description = "Executa os upgrades 1, 2, 2 max e 3 em sequencia",
         ToggleKey = Enum.KeyCode.G,
         Delay = 0.1,
         Run = function()
-            getUpgradeRemote():FireServer(1, false)
-        end,
-    },
-    {
-        Id = "upgrade_2_single",
-        Title = "Upgrade 2",
-        Description = 'game:GetService("ReplicatedStorage").Events.Upgrade:FireServer(2, false)',
-        ToggleKey = Enum.KeyCode.H,
-        Delay = 0.1,
-        Run = function()
-            getUpgradeRemote():FireServer(2, false)
-        end,
-    },
-    {
-        Id = "upgrade_2_bulk",
-        Title = "Upgrade 2 Max",
-        Description = 'game:GetService("ReplicatedStorage").Events.Upgrade:FireServer(2, true)',
-        ToggleKey = Enum.KeyCode.J,
-        Delay = 0.1,
-        Run = function()
-            getUpgradeRemote():FireServer(2, true)
+            local remote = getUpgradeRemote()
+            remote:FireServer(1, false)
+            remote:FireServer(2, false)
+            remote:FireServer(2, true)
+            remote:FireServer(3, false)
         end,
     },
 }
