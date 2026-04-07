@@ -32,6 +32,14 @@ local function getUpgradeRemote()
     return getEventsFolder():WaitForChild("Upgrade")
 end
 
+local function getPrestigeRemote()
+    return getEventsFolder():WaitForChild("Prestige")
+end
+
+local function getPrestigeUpgradeRemote()
+    return getPrestigeRemote():WaitForChild("PrestigeUpgrade")
+end
+
 local EVENTS = {
     {
         Id = "click_money",
@@ -55,6 +63,29 @@ local EVENTS = {
             remote:FireServer(2, false)
             remote:FireServer(2, true)
             remote:FireServer(3, false)
+        end,
+    },
+    {
+        Id = "prestigio",
+        Title = "Prestigio",
+        Description = 'game:GetService("ReplicatedStorage").Events.Prestige:FireServer()',
+        ToggleKey = Enum.KeyCode.H,
+        Delay = 0.2,
+        Run = function()
+            getPrestigeRemote():FireServer()
+        end,
+    },
+    {
+        Id = "arvore_prestigio",
+        Title = "Arvore de Prestigio",
+        Description = "Executa PrestigeUpgrade(2), PrestigeUpgrade(9) e PrestigeUpgrade(1)",
+        ToggleKey = Enum.KeyCode.J,
+        Delay = 0.2,
+        Run = function()
+            local remote = getPrestigeUpgradeRemote()
+            remote:FireServer(2)
+            remote:FireServer(9)
+            remote:FireServer(1)
         end,
     },
 }
