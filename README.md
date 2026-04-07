@@ -32,7 +32,7 @@ Esse `loader.lua` usa cache bust interno para puxar a versao mais nova do `money
 - Tecla padrao: `G`
 - `Prestigio`: faz `game:GetService("ReplicatedStorage").Events.Prestige:FireServer()`
 - Tecla padrao: `H`
-- `Arvore de Prestigio`: faz `PrestigeUpgrade(2)`, `PrestigeUpgrade(9)` e `PrestigeUpgrade(1)` em sequencia
+- `Arvore de Prestigio`: faz `PrestigeUpgrade(2)`, `PrestigeUpgrade(9)`, `PrestigeUpgrade(1)`, `PrestigeUpgrade(31)`, `PrestigeUpgrade(11)`, `PrestigeUpgrade(3)` e `PrestigeUpgrade(28)` em sequencia
 - Tecla padrao: `J`
 - `Delete`: minimiza ou mostra a GUI
 
