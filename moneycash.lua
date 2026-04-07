@@ -20,9 +20,16 @@ end
 ROOT[RUN_KEY] = (tonumber(ROOT[RUN_KEY]) or 0) + 1
 local currentRunId = ROOT[RUN_KEY]
 
+local function getEventsFolder()
+    return ReplicatedStorage:WaitForChild("Events")
+end
+
 local function getClickMoneyRemote()
-    local eventsFolder = ReplicatedStorage:WaitForChild("Events")
-    return eventsFolder:WaitForChild("ClickMoney")
+    return getEventsFolder():WaitForChild("ClickMoney")
+end
+
+local function getUpgradeRemote()
+    return getEventsFolder():WaitForChild("Upgrade")
 end
 
 local EVENTS = {
@@ -34,6 +41,36 @@ local EVENTS = {
         Delay = 0.01,
         Run = function()
             getClickMoneyRemote():FireServer()
+        end,
+    },
+    {
+        Id = "upgrade_1_single",
+        Title = "Upgrade 1",
+        Description = 'game:GetService("ReplicatedStorage").Events.Upgrade:FireServer(1, false)',
+        ToggleKey = Enum.KeyCode.G,
+        Delay = 0.1,
+        Run = function()
+            getUpgradeRemote():FireServer(1, false)
+        end,
+    },
+    {
+        Id = "upgrade_2_single",
+        Title = "Upgrade 2",
+        Description = 'game:GetService("ReplicatedStorage").Events.Upgrade:FireServer(2, false)',
+        ToggleKey = Enum.KeyCode.H,
+        Delay = 0.1,
+        Run = function()
+            getUpgradeRemote():FireServer(2, false)
+        end,
+    },
+    {
+        Id = "upgrade_2_bulk",
+        Title = "Upgrade 2 Max",
+        Description = 'game:GetService("ReplicatedStorage").Events.Upgrade:FireServer(2, true)',
+        ToggleKey = Enum.KeyCode.J,
+        Delay = 0.1,
+        Run = function()
+            getUpgradeRemote():FireServer(2, true)
         end,
     },
 }
@@ -142,7 +179,7 @@ local isTouchDevice = UserInputService.TouchEnabled == true
 
 local mainFrame = Instance.new("Frame")
 mainFrame.Name = "MainFrame"
-mainFrame.Size = isTouchDevice and UDim2.new(0, 352, 0, 252) or UDim2.new(0, 430, 0, 262)
+mainFrame.Size = isTouchDevice and UDim2.new(0, 352, 0, 360) or UDim2.new(0, 430, 0, 430)
 mainFrame.Position = UDim2.new(0.5, -(mainFrame.Size.X.Offset / 2), 0.5, -(mainFrame.Size.Y.Offset / 2))
 mainFrame.BackgroundColor3 = Color3.fromRGB(24, 31, 46)
 mainFrame.BorderSizePixel = 0
@@ -218,16 +255,28 @@ makeStroke(body, Color3.fromRGB(90, 109, 148), 0.45, 1)
 local summaryLabel = createText(body, {
     Position = UDim2.new(0, 0, 0, 0),
     Size = UDim2.new(1, 0, 0, 18),
-    Text = "0 de 1 eventos ativos",
+    Text = string.format("0 de %d eventos ativos", #EVENTS),
     TextColor3 = Color3.fromRGB(151, 164, 194),
     TextSize = 11,
 })
 
-local rowHolder = Instance.new("Frame")
+local rowHolder = Instance.new("ScrollingFrame")
 rowHolder.BackgroundTransparency = 1
 rowHolder.Position = UDim2.new(0, 0, 0, 28)
 rowHolder.Size = UDim2.new(1, 0, 1, -28)
+rowHolder.CanvasSize = UDim2.new(0, 0, 0, 0)
+rowHolder.ScrollBarThickness = 4
+rowHolder.BorderSizePixel = 0
+rowHolder.AutomaticCanvasSize = Enum.AutomaticSize.None
 rowHolder.Parent = body
+
+local rowLayout = Instance.new("UIListLayout")
+rowLayout.Padding = UDim.new(0, 8)
+rowLayout.Parent = rowHolder
+
+bind(rowLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
+    rowHolder.CanvasSize = UDim2.new(0, 0, 0, rowLayout.AbsoluteContentSize.Y + 8)
+end)
 
 local openButton = createText(screenGui, {
     Button = true,
@@ -297,10 +346,9 @@ local function toggleEvent(eventId)
     return setEventEnabled(eventId, not eventState.Enabled)
 end
 
-local function createEventRow(index, eventConfig)
+local function createEventRow(eventConfig)
     local row = Instance.new("Frame")
     row.Size = UDim2.new(1, 0, 0, 130)
-    row.Position = UDim2.new(0, 0, 0, (index - 1) * 138)
     row.BackgroundColor3 = Color3.fromRGB(34, 43, 62)
     row.BorderSizePixel = 0
     row.Parent = rowHolder
@@ -364,14 +412,14 @@ local function createEventRow(index, eventConfig)
     end)
 end
 
-for index, eventConfig in ipairs(EVENTS) do
+for _, eventConfig in ipairs(EVENTS) do
     state.EventStates[eventConfig.Id] = {
         Config = eventConfig,
         Enabled = false,
         Delay = tonumber(eventConfig.Delay) or 0.01,
     }
 
-    createEventRow(index, eventConfig)
+    createEventRow(eventConfig)
 end
 
 bind(minimizeButton.MouseButton1Click, function()
