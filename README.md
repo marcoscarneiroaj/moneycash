@@ -30,6 +30,10 @@ Esse `loader.lua` usa cache bust interno para puxar a versao mais nova do `money
 - Delay padrao: `0.01`
 - `Melhoria Cash`: faz `Upgrade(1, false)`, `Upgrade(2, false)`, `Upgrade(2, true)` e `Upgrade(3, false)` em sequencia
 - Tecla padrao: `G`
+- `Click Gem`: faz `game:GetService("ReplicatedStorage").Events.ClickMoney.ClickGem:FireServer()` duas vezes por ciclo
+- Tecla padrao: `K`
+- `Gemas`: faz `GemUpgrade(3, false)`, `GemUpgrade(3, false)`, `GemUpgrade(2, false)` e `GemUpgrade(1, false)` em sequencia
+- Tecla padrao: `L`
 - `Prestigio`: faz `game:GetService("ReplicatedStorage").Events.Prestige:FireServer()`
 - Tecla padrao: `H`
 - `Arvore de Prestigio`: faz `PrestigeUpgrade(2)`, `PrestigeUpgrade(9)`, `PrestigeUpgrade(1)`, `PrestigeUpgrade(31)`, `PrestigeUpgrade(11)`, `PrestigeUpgrade(3)` e `PrestigeUpgrade(28)` em sequencia
