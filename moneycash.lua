@@ -440,7 +440,16 @@ bind(closeButton.MouseButton1Click, function()
 end)
 
 bind(UserInputService.InputBegan, function(input, gameProcessed)
-    if state.Running ~= true or gameProcessed then
+    if state.Running ~= true then
+        return
+    end
+
+    if input.KeyCode == Enum.KeyCode.Delete then
+        setVisible(not state.Visible)
+        return
+    end
+
+    if gameProcessed then
         return
     end
 
