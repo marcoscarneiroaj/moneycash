@@ -22,6 +22,13 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/marcoscarneiroaj/mone
 
 Esse `loader.lua` usa cache bust interno para puxar a versao mais nova do `moneycash.lua` sem voce precisar trocar a URL.
 
+## Abas da GUI
+
+- `Cash`: mostra `Click Money` e `Melhoria Cash`
+- `Gemas`: mostra `Click Gem` e `Gemas`
+- `Mineracao`: mostra `Click Mineracao` e `Melhoria Mineracao`
+- `Prestigio`: mostra `Prestigio` e `Arvore de Prestigio`
+
 ## Eventos atuais
 
 - `Click Money`: faz `game:GetService("ReplicatedStorage").Events.ClickMoney:FireServer()`
@@ -34,6 +41,10 @@ Esse `loader.lua` usa cache bust interno para puxar a versao mais nova do `money
 - Tecla padrao: `K`
 - `Gemas`: faz `GemUpgrade(3, false)`, `GemUpgrade(3, false)`, `GemUpgrade(2, false)` e `GemUpgrade(1, false)` em sequencia
 - Tecla padrao: `L`
+- `Click Mineracao`: faz `game:GetService("ReplicatedStorage").Events.ClickMoney.ClickMining:FireServer()`
+- Tecla padrao: `M`
+- `Melhoria Mineracao`: faz `MiningUpgrade(2)` e `MiningUpgrade(1)` em sequencia
+- Tecla padrao: `N`
 - `Prestigio`: faz `game:GetService("ReplicatedStorage").Events.Prestige:FireServer()`
 - Tecla padrao: `H`
 - `Arvore de Prestigio`: faz `PrestigeUpgrade(2)`, `PrestigeUpgrade(9)`, `PrestigeUpgrade(1)`, `PrestigeUpgrade(31)`, `PrestigeUpgrade(11)`, `PrestigeUpgrade(3)` e `PrestigeUpgrade(28)` em sequencia
