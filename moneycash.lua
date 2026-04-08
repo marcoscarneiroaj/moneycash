@@ -32,12 +32,20 @@ local function getClickGemRemote()
     return getClickMoneyRemote():WaitForChild("ClickGem")
 end
 
+local function getClickMiningRemote()
+    return getClickMoneyRemote():WaitForChild("ClickMining")
+end
+
 local function getUpgradeRemote()
     return getEventsFolder():WaitForChild("Upgrade")
 end
 
 local function getGemUpgradeRemote()
     return getUpgradeRemote():WaitForChild("GemUpgrade")
+end
+
+local function getMiningUpgradeRemote()
+    return getUpgradeRemote():WaitForChild("MiningUpgrade")
 end
 
 local function getPrestigeRemote()
@@ -51,6 +59,7 @@ end
 local EVENTS = {
     {
         Id = "click_money",
+        Tab = "Cash",
         Title = "Click Money",
         Description = 'game:GetService("ReplicatedStorage").Events.ClickMoney:FireServer()',
         ToggleKey = Enum.KeyCode.F,
@@ -61,6 +70,7 @@ local EVENTS = {
     },
     {
         Id = "melhoria_cash",
+        Tab = "Cash",
         Title = "Melhoria Cash",
         Description = "Executa os upgrades 1, 2, 2 max e 3 em sequencia",
         ToggleKey = Enum.KeyCode.G,
@@ -75,6 +85,7 @@ local EVENTS = {
     },
     {
         Id = "click_gem",
+        Tab = "Gemas",
         Title = "Click Gem",
         Description = 'game:GetService("ReplicatedStorage").Events.ClickMoney.ClickGem:FireServer()',
         ToggleKey = Enum.KeyCode.K,
@@ -87,6 +98,7 @@ local EVENTS = {
     },
     {
         Id = "gemas",
+        Tab = "Gemas",
         Title = "Gemas",
         Description = "Executa GemUpgrade(3,false), GemUpgrade(3,false), GemUpgrade(2,false) e GemUpgrade(1,false)",
         ToggleKey = Enum.KeyCode.L,
@@ -100,7 +112,32 @@ local EVENTS = {
         end,
     },
     {
+        Id = "click_mineracao",
+        Tab = "Mineracao",
+        Title = "Click Mineracao",
+        Description = 'game:GetService("ReplicatedStorage").Events.ClickMoney.ClickMining:FireServer()',
+        ToggleKey = Enum.KeyCode.M,
+        Delay = 0.01,
+        Run = function()
+            getClickMiningRemote():FireServer()
+        end,
+    },
+    {
+        Id = "melhoria_mineracao",
+        Tab = "Mineracao",
+        Title = "Melhoria Mineracao",
+        Description = "Executa MiningUpgrade(2) e MiningUpgrade(1)",
+        ToggleKey = Enum.KeyCode.N,
+        Delay = 0.1,
+        Run = function()
+            local remote = getMiningUpgradeRemote()
+            remote:FireServer(2)
+            remote:FireServer(1)
+        end,
+    },
+    {
         Id = "prestigio",
+        Tab = "Prestigio",
         Title = "Prestigio",
         Description = 'game:GetService("ReplicatedStorage").Events.Prestige:FireServer()',
         ToggleKey = Enum.KeyCode.H,
@@ -111,6 +148,7 @@ local EVENTS = {
     },
     {
         Id = "arvore_prestigio",
+        Tab = "Prestigio",
         Title = "Arvore de Prestigio",
         Description = "Executa PrestigeUpgrade(2, 9, 1, 31, 11, 3, 28)",
         ToggleKey = Enum.KeyCode.J,
@@ -128,12 +166,23 @@ local EVENTS = {
     },
 }
 
+local TAB_DEFINITIONS = {
+    { Id = "Cash", Label = "Cash" },
+    { Id = "Gemas", Label = "Gemas" },
+    { Id = "Mineracao", Label = "Mineracao" },
+    { Id = "Prestigio", Label = "Prestigio" },
+}
+
 local state = {
     Running = true,
     Visible = true,
     Connections = {},
     EventStates = {},
     Rows = {},
+    Pages = {},
+    PageLayouts = {},
+    TabButtons = {},
+    CurrentTab = TAB_DEFINITIONS[1].Id,
     RunId = currentRunId,
 }
 
@@ -313,23 +362,22 @@ local summaryLabel = createText(body, {
     TextSize = 11,
 })
 
-local rowHolder = Instance.new("ScrollingFrame")
-rowHolder.BackgroundTransparency = 1
-rowHolder.Position = UDim2.new(0, 0, 0, 28)
-rowHolder.Size = UDim2.new(1, 0, 1, -28)
-rowHolder.CanvasSize = UDim2.new(0, 0, 0, 0)
-rowHolder.ScrollBarThickness = 4
-rowHolder.BorderSizePixel = 0
-rowHolder.AutomaticCanvasSize = Enum.AutomaticSize.None
-rowHolder.Parent = body
+local tabBar = Instance.new("Frame")
+tabBar.BackgroundTransparency = 1
+tabBar.Position = UDim2.new(0, 0, 0, 24)
+tabBar.Size = UDim2.new(1, 0, 0, 34)
+tabBar.Parent = body
 
-local rowLayout = Instance.new("UIListLayout")
-rowLayout.Padding = UDim.new(0, 8)
-rowLayout.Parent = rowHolder
+local tabLayout = Instance.new("UIListLayout")
+tabLayout.FillDirection = Enum.FillDirection.Horizontal
+tabLayout.Padding = UDim.new(0, 6)
+tabLayout.Parent = tabBar
 
-bind(rowLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
-    rowHolder.CanvasSize = UDim2.new(0, 0, 0, rowLayout.AbsoluteContentSize.Y + 8)
-end)
+local pageContainer = Instance.new("Frame")
+pageContainer.BackgroundTransparency = 1
+pageContainer.Position = UDim2.new(0, 0, 0, 66)
+pageContainer.Size = UDim2.new(1, 0, 1, -66)
+pageContainer.Parent = body
 
 local openButton = createText(screenGui, {
     Button = true,
@@ -357,6 +405,31 @@ local function refreshSummary()
     summaryLabel.Text = string.format("%d de %d eventos ativos", enabledCount, #EVENTS)
 end
 
+local function setTabButtonState(button, active)
+    if not button then
+        return
+    end
+
+    button.BackgroundColor3 = active and Color3.fromRGB(77, 120, 219) or Color3.fromRGB(34, 43, 62)
+    local stroke = button:FindFirstChild("TabStroke")
+    if stroke then
+        stroke.Color = active and Color3.fromRGB(144, 191, 255) or Color3.fromRGB(105, 122, 161)
+        stroke.Transparency = active and 0.12 or 0.4
+    end
+end
+
+local function showTab(tabId)
+    state.CurrentTab = tabId
+
+    for pageId, page in pairs(state.Pages) do
+        page.Visible = pageId == tabId
+    end
+
+    for pageId, button in pairs(state.TabButtons) do
+        setTabButtonState(button, pageId == tabId)
+    end
+end
+
 local function refreshRow(eventConfig)
     local eventState = state.EventStates[eventConfig.Id]
     local row = state.Rows[eventConfig.Id]
@@ -377,6 +450,55 @@ local function setVisible(visible)
     state.Visible = visible == true
     mainFrame.Visible = state.Visible
     openButton.Visible = not state.Visible
+end
+
+local function createTabButton(tabInfo)
+    local button = createText(tabBar, {
+        Button = true,
+        Size = UDim2.new(0, 76, 1, 0),
+        Text = tabInfo.Label,
+        Font = Enum.Font.GothamSemibold,
+        TextSize = 11,
+        TextXAlignment = Enum.TextXAlignment.Center,
+        BackgroundTransparency = 0,
+        BackgroundColor3 = Color3.fromRGB(34, 43, 62),
+    })
+    makeCorner(button, 10)
+    local stroke = makeStroke(button, Color3.fromRGB(105, 122, 161), 0.4, 1)
+    stroke.Name = "TabStroke"
+    state.TabButtons[tabInfo.Id] = button
+
+    bind(button.MouseButton1Click, function()
+        showTab(tabInfo.Id)
+    end)
+
+    return button
+end
+
+local function createTabPage(tabInfo)
+    local page = Instance.new("ScrollingFrame")
+    page.Name = tabInfo.Id
+    page.BackgroundTransparency = 1
+    page.Size = UDim2.new(1, 0, 1, 0)
+    page.CanvasSize = UDim2.new(0, 0, 0, 0)
+    page.ScrollBarThickness = 4
+    page.BorderSizePixel = 0
+    page.AutomaticCanvasSize = Enum.AutomaticSize.None
+    page.Visible = false
+    page.Parent = pageContainer
+
+    local layout = Instance.new("UIListLayout")
+    layout.Padding = UDim.new(0, 8)
+    layout.Parent = page
+
+    state.Pages[tabInfo.Id] = page
+    state.PageLayouts[tabInfo.Id] = layout
+
+    bind(layout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
+        page.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y + 8)
+    end)
+
+    return page
 end
 
 local function setEventEnabled(eventId, enabled)
@@ -400,11 +522,16 @@ local function toggleEvent(eventId)
 end
 
 local function createEventRow(eventConfig)
+    local page = state.Pages[eventConfig.Tab]
+    if not page then
+        return
+    end
+
     local row = Instance.new("Frame")
     row.Size = UDim2.new(1, 0, 0, 130)
     row.BackgroundColor3 = Color3.fromRGB(34, 43, 62)
     row.BorderSizePixel = 0
-    row.Parent = rowHolder
+    row.Parent = page
     makeCorner(row, 16)
     makeStroke(row, Color3.fromRGB(106, 124, 168), 0.3, 1)
 
@@ -463,6 +590,11 @@ local function createEventRow(eventConfig)
     bind(toggleButton.MouseButton1Click, function()
         toggleEvent(eventConfig.Id)
     end)
+end
+
+for _, tabInfo in ipairs(TAB_DEFINITIONS) do
+    createTabButton(tabInfo)
+    createTabPage(tabInfo)
 end
 
 for _, eventConfig in ipairs(EVENTS) do
@@ -586,6 +718,7 @@ end
 
 ROOT[STATE_KEY] = state
 
+showTab(state.CurrentTab)
 refreshSummary()
 for _, eventConfig in ipairs(EVENTS) do
     refreshRow(eventConfig)
