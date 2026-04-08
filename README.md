@@ -35,7 +35,7 @@ Esse `loader.lua` usa cache bust interno para puxar a versao mais nova do `money
 - Botao na GUI para ligar e desligar
 - Tecla padrao: `F`
 - Delay padrao: `0.01`
-- `Melhoria Cash`: faz `Upgrade(1, false)`, `Upgrade(2, false)`, `Upgrade(2, true)` e `Upgrade(3, false)` em sequencia
+- `Melhoria Cash`: faz `Upgrade(1, false)`, `Upgrade(2, false)`, `Upgrade(2, true)`, `Upgrade(3, false)`, `Upgrade(4, false)`, `Upgrade(5, false)` e `Upgrade(6, false)` em sequencia
 - Tecla padrao: `G`
 - `Click Gem`: faz `game:GetService("ReplicatedStorage").Events.ClickMoney.ClickGem:FireServer()` duas vezes por ciclo
 - Tecla padrao: `K`
