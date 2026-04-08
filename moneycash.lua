@@ -72,7 +72,7 @@ local EVENTS = {
         Id = "melhoria_cash",
         Tab = "Cash",
         Title = "Melhoria Cash",
-        Description = "Executa os upgrades 1, 2, 2 max e 3 em sequencia",
+        Description = "Executa os upgrades 1, 2, 2 max, 3, 4, 5 e 6 em sequencia",
         ToggleKey = Enum.KeyCode.G,
         Delay = 0.1,
         Run = function()
@@ -81,6 +81,9 @@ local EVENTS = {
             remote:FireServer(2, false)
             remote:FireServer(2, true)
             remote:FireServer(3, false)
+            remote:FireServer(4, false)
+            remote:FireServer(5, false)
+            remote:FireServer(6, false)
         end,
     },
     {
